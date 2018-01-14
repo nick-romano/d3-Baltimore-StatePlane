@@ -29,3 +29,26 @@ body {
   grid-template-rows: 80px auto;
 }
 }
+.box-profile {
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 1em;
+    background: #eee;
+}
+
+button {
+  border-radius: 10px;
+  border: 1px solid #999;
+  background: #eee;
+  outline: none;
+}
+
+img {
+padding-top: 5vmin;
+  border-radius: 50% 50%;
+  overflow: hidden;
+}
+
+button * {
+    outline: none;
+}

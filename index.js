@@ -12,10 +12,7 @@ require('expose-loader?d3!d3');
 require('expose-loader?React!react');
 require('expose-loader?ReactDOM!react-dom');
 //d3.sliderHorizontal = simpleSlider;
-console.log(mdJSON)
-
-import './comps.js'
-
+import sideBar from './comps.js'
 
 var color = d3.scaleThreshold()
     .range(["#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#49006a"])
@@ -30,13 +27,13 @@ d3.select('#contain')
     .append('svg')
     .attr('width', '100%')
     .attr('height', '90%')
-    .attr('display','block')
+    .attr('display', 'block')
     .style('padding-top', '10px')
-    //.attr('left', '50%')
-    //.attr('position', 'relative')
-    //.attr('transform', "translate -50% -50%")
+//.attr('left', '50%')
+//.attr('position', 'relative')
+//.attr('transform', "translate -50% -50%")
 
-var chart = d3.select("svg")
+var chart = d3.select("svg");
 
 //mdJSON = d3.geoProjection(function(){mdJSON,d3.geoAlbersUsa().fitSize([960, 960], d))
 var topology = topojson.topology({ counties: mdJSON });
@@ -49,35 +46,55 @@ var land = topojson.feature(topology, {
     })
 });
 
-var svgHeight = d3.select('svg').style('height').slice(0,-2)*1;
-var svgWidth = d3.select('svg').style('width').slice(0,-2)*1;
+console.log(land)
+
+var svgHeight = d3.select('svg').style('height').slice(0, -2) * 1;
+var svgWidth = d3.select('svg').style('width').slice(0, -2) * 1;
 var path = d3.geoPath()
     .projection(d3.geoTransverseMercator()
         .rotate([77, -37.66666666666666])
-        .fitSize([svgWidth,svgHeight], land)
+        .fitSize([svgWidth, svgHeight], land)
+    );
+
+var path2 = d3.geoPath()
+    .projection(d3.geoTransverseMercator()
+        .rotate([77, -37.66666666666666])
+        .fitSize([25, 25], land)
     );
 
 
-chart.selectAll("path")
-  .data(mdJSON.features)
-  .enter()
-  .append("path")
-  .attr("d", path)
-  .style("stroke", "#fff")
-  .style("stroke-width", "1")
-  .on('mouseover', function(){console.log('yo')})
-  .style("fill", function(d) {
+var hiddenChart = d3.select("#hiddenSVG")
+    .selectAll("path")
+    .data(mdJSON.features.splice(0, 1))
+    .attr("d", path2)
+    .style("stroke", "#fff")
+    .style("stroke-width", "1")
 
-  // Get data value
-  var value = d.properties.MHI;
-  if (value) {
-  //If value exists…
-  return color(value);
-  } else {
-  //If value is undefined…
-  return "#fffff";
-  }
-});
+
+
+
+chart.selectAll("path")
+    .data(mdJSON.features)
+    .enter()
+    .append("path")
+    .attr("d", path)
+    .style("stroke", "#fff")
+    .style("stroke-width", "1")
+    .on('mouseover', function() { console.log('yo') })
+    .style("fill", function(d) {
+
+        // Get data value
+        var value = d.properties.MHI;
+        if (value) {
+            //If value exists…
+            return color(value);
+        } else {
+            //If value is undefined…
+            return "#fffff";
+        }
+    });
+
+sideBar(mdJSON, land);
 
 
 
