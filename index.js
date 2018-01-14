@@ -97,6 +97,7 @@ chart.selectAll("path")
 sideBar(mdJSON, land);
 
 
+export default sideBar;
 
 // subset.forEach(function(d) {
 //     context.fillStyle = color(d.properties.MHI);
