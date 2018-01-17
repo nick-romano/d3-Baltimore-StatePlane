@@ -16,9 +16,10 @@ function sideBar(mdJSON, land) {
 			return (
 				<div className="box-profile">
 					<h6>{this.props.blockGroup}</h6>
-					<h3>{this.props.Population}</h3>
+					<h6>Population: {this.props.Population}</h6>
 					<p> {this.props.Neighborhood}</p>
-					<p>{this.props.location}</p>
+					<h6>Median Household income: ${this.props.MHI}</h6>
+					<h6>Number of Vacant Homes: {this.props.Vacants}</h6>
 					<div><svg height={50} width={50}><path d={this.props.radius} style={pathStyle} /></svg></div>
 					<br />
 					<button onClick={this.zoomPicOut.bind(this)}>-</button>
@@ -46,6 +47,9 @@ function sideBar(mdJSON, land) {
 					key = {features.properties.GEOID}
 					blockGroup = {features.properties.NAME}
 					radius= {getPath(features, features)}
+					Population = {features.properties.TOTALPOPULATION}
+					MHI = {features.properties.MHI}
+					Vacants = {features.properties.VACANT}
 				/>
 			)
     		//console.log(listItems)
