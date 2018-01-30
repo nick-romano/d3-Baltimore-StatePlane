@@ -29,11 +29,16 @@ d3.select('#contain')
     .attr('height', '90%')
     .attr('display', 'block')
     .style('padding-top', '10px')
+    .call(d3.zoom().on("zoom", function () {
+              svg.attr("transform", d3.event.transform)
+    }))
 //.attr('left', '50%')
 //.attr('position', 'relative')
 //.attr('transform', "translate -50% -50%")
 
 var chart = d3.select("svg");
+
+
 
 //mdJSON = d3.geoProjection(function(){mdJSON,d3.geoAlbersUsa().fitSize([960, 960], d))
 var topology = topojson.topology({ counties: mdJSON });
@@ -56,21 +61,6 @@ var path = d3.geoPath()
         .fitSize([svgWidth, svgHeight], land)
     );
 
-var path2 = d3.geoPath()
-    .projection(d3.geoTransverseMercator()
-        .rotate([77, -37.66666666666666])
-        .fitSize([25, 25], land)
-    );
-
-
-var hiddenChart = d3.select("#hiddenSVG")
-    .selectAll("path")
-    .data(mdJSON.features.splice(0, 1))
-    .attr("d", path2)
-    .style("stroke", "#fff")
-    .style("stroke-width", "1")
-
-
 
 
 chart.selectAll("path")
@@ -80,7 +70,8 @@ chart.selectAll("path")
     .attr("d", path)
     .style("stroke", "#fff")
     .style("stroke-width", "1")
-    .on('mouseover', function() { console.log('yo') })
+    .attr('data-Scroll', function(d, a){ return a * 357})
+    .on('mouseover', function(d) {document.getElementById("app").scrollTop = (this.getAttribute("data-Scroll") - 2); console.log(d.properties.NAME)})
     .style("fill", function(d) {
 
         // Get data value
