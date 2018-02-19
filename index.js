@@ -2,9 +2,6 @@ import _ from 'lodash';
 import * as d3 from "d3";
 import * as topojson from "topojson";
 import './style.css';
-var React = require('react');
-var ReactDOM = require('react-dom')
-
 
 var mdJSON = require('./mdmhi.json')
 //const simpleSlider = require('d3-simple-slider').sliderHorizontal;
@@ -13,6 +10,30 @@ require('expose-loader?React!react');
 require('expose-loader?ReactDOM!react-dom');
 //d3.sliderHorizontal = simpleSlider;
 import sideBar from './comps.js'
+import Functions from './mapFunctions.js'
+
+
+
+function Query(url) {
+    fetch('../data/baltimore/acs5', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            fields: 'mhi'
+        })
+    }).then(function(response) {
+        // The response is a Response instance.
+        // You parse the data into a useable format using `.json()`
+        return response.json();
+    }).then(function(data) {
+        // `data` is the parsed version of the JSON returned from the above endpoint.
+        console.log(data);
+    });
+}
+
 
 var color = d3.scaleThreshold()
     .range(["#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#49006a"])
@@ -29,8 +50,8 @@ d3.select('#contain')
     .attr('height', '90%')
     .attr('display', 'block')
     .style('padding-top', '10px')
-    .call(d3.zoom().on("zoom", function () {
-              svg.attr("transform", d3.event.transform)
+    .call(d3.zoom().on("zoom", function() {
+        svg.attr("transform", d3.event.transform)
     }))
 //.attr('left', '50%')
 //.attr('position', 'relative')
@@ -51,7 +72,7 @@ var land = topojson.feature(topology, {
     })
 });
 
-console.log(land)
+//console.log(land)
 
 var svgHeight = d3.select('svg').style('height').slice(0, -2) * 1;
 var svgWidth = d3.select('svg').style('width').slice(0, -2) * 1;
@@ -70,8 +91,9 @@ chart.selectAll("path")
     .attr("d", path)
     .style("stroke", "#fff")
     .style("stroke-width", "1")
-    .attr('data-Scroll', function(d, a){ return a * 357})
-    .on('mouseover', function(d) {document.getElementById("app").scrollTop = (this.getAttribute("data-Scroll") - 2); console.log(d.properties.NAME)})
+    .attr('data-Scroll', function(d, a) { return a * 357 })
+    .on('mouseover', function(d) { document.getElementById("app").scrollTop = (this.getAttribute("data-Scroll") - 2);
+        console.log(d.properties.NAME) })
     .style("fill", function(d) {
 
         // Get data value
@@ -88,7 +110,6 @@ chart.selectAll("path")
 sideBar(mdJSON, land);
 
 
-export default sideBar;
 
 // subset.forEach(function(d) {
 //     context.fillStyle = color(d.properties.MHI);

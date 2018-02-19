@@ -1,4 +1,6 @@
-
+.box-profile:first-child {
+  margin-top:10px;
+}
 
 @media screen and (max-width:770px) {
 .container {
@@ -17,7 +19,7 @@ button {
 }
 
 img {
-padding-top: 5vmin;
+  padding-top: 5vmin;
   border-radius: 50% 50%;
   overflow: hidden;
 }

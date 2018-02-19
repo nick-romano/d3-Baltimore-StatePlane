@@ -20,7 +20,7 @@ function sideBar(mdJSON, land) {
 					<p> {this.props.Neighborhood}</p>
 					<h6>Median Household income: ${this.props.MHI}</h6>
 					<h6>Number of Vacant Homes: {this.props.Vacants}</h6>
-					<div><svg height={50} width={50}><path d={this.props.radius} fill={this.props.Color} /></svg></div>
+					<div><svg height={50} width={50}><path d={this.props.radius} fill={this.props.Color}/></svg></div>
 					<br />
 					<button onClick={this.zoomPicOut.bind(this)}>-</button>
 					<button onClick={this.zoomPicIn.bind(this)}>+</button>

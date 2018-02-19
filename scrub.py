@@ -20,7 +20,7 @@ with open('mdb.json', 'rb') as f:
 		TRACT = str(data['features'][i]['properties']['TRACTCE'])
 		url = "https://api.census.gov/data/2015/acs5?get=NAME,B01003_001E,B25001_001E,B25002_002E,B25002_003E,BLKGRP,B19013_001E,B19013_001M&for=block group:%s&in=state:%s county:%s tract:%s&key=%s" % (BLKGRP, state, county, TRACT,key)
 		url = url.replace(" ", "%20")
-		#print(url)
+		print(url)
 		censusdata = getInfo(url)
 		data['features'][i]['properties']['NAME'] = censusdata[1][0]
 		data['features'][i]['properties']['TOTALPOPULATION'] = censusdata[1][1]
@@ -31,5 +31,5 @@ with open('mdb.json', 'rb') as f:
 		data['features'][i]['properties']['MHIE'] = censusdata[1][7]
 		
 
-	with open('mdmhi.json', 'wb') as wf:
+	with open('mdmhitest.json', 'wb') as wf:
 		json.dump(data, wf)
