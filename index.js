@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import * as d3 from "d3";
-import * as topojson from "topojson";
+
 import './style.css';
 
 var mdJSON = require('./mdmhi.json')
@@ -10,8 +9,14 @@ require('expose-loader?React!react');
 require('expose-loader?ReactDOM!react-dom');
 //d3.sliderHorizontal = simpleSlider;
 import sideBar from './comps.js'
-import Functions from './mapFunctions.js'
+import Map from './mapFunctions.js'
 
+ReactDOM.render(
+        <Map
+        mdJSON={mdJSON}
+        />, 
+        document.querySelector('.item-2')
+    );
 
 
 function Query(url) {
@@ -35,79 +40,9 @@ function Query(url) {
 }
 
 
-var color = d3.scaleThreshold()
-    .range(["#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#49006a"])
-    .domain([0, 1000, 5000, 10000, 20000, 30000, 50000, 80000, 200000]);
-
-d3.select('.item-2')
-    .append('div')
-    .attr('id', 'contain')
-    .style('padding-top', '10px')
-
-d3.select('#contain')
-    .append('svg')
-    .attr('width', '100%')
-    .attr('height', '90%')
-    .attr('display', 'block')
-    .style('padding-top', '10px')
-    .call(d3.zoom().on("zoom", function() {
-        svg.attr("transform", d3.event.transform)
-    }))
-//.attr('left', '50%')
-//.attr('position', 'relative')
-//.attr('transform', "translate -50% -50%")
-
-var chart = d3.select("svg");
 
 
-
-//mdJSON = d3.geoProjection(function(){mdJSON,d3.geoAlbersUsa().fitSize([960, 960], d))
-var topology = topojson.topology({ counties: mdJSON });
-
-var land = topojson.feature(topology, {
-    type: "GeometryCollection",
-    geometries: topology.objects.counties.geometries.filter(function(d) {
-        //return (d.id / 10000 | 0) % 100 !== 99;
-        return true
-    })
-});
-
-//console.log(land)
-
-var svgHeight = d3.select('svg').style('height').slice(0, -2) * 1;
-var svgWidth = d3.select('svg').style('width').slice(0, -2) * 1;
-var path = d3.geoPath()
-    .projection(d3.geoTransverseMercator()
-        .rotate([77, -37.66666666666666])
-        .fitSize([svgWidth, svgHeight], land)
-    );
-
-
-
-chart.selectAll("path")
-    .data(mdJSON.features)
-    .enter()
-    .append("path")
-    .attr("d", path)
-    .style("stroke", "#fff")
-    .style("stroke-width", "1")
-    .attr('data-Scroll', function(d, a) { return a * 357 })
-    .on('mouseover', function(d) { document.getElementById("app").scrollTop = (this.getAttribute("data-Scroll") - 2);
-        console.log(d.properties.NAME) })
-    .style("fill", function(d) {
-
-        // Get data value
-        var value = d.properties.MHI;
-        if (value) {
-            //If value exists…
-            return color(value);
-        } else {
-            //If value is undefined…
-            return "#fffff";
-        }
-    });
-
-sideBar(mdJSON, land);
+sideBar(mdJSON);
 
 
 
