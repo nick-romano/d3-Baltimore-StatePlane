@@ -1,7 +1,12 @@
 import * as d3 from "d3";
 import * as topojson from "topojson";
 import ReactResizeDetector from 'react-resize-detector';
+import scaleCluster from 'd3-scale-cluster';
+import legend from 'd3-svg-legend';
 
+var svgLegend = legend;
+
+console.log(scaleCluster)
 
 //var mdJSON = require('./mdmhi.json')
 class Map extends React.Component {
@@ -9,17 +14,24 @@ class Map extends React.Component {
 			super(props);
 			this.state = {
 				height: 100,
-				color: d3.scaleThreshold()
-    					.range(["#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#49006a"])
-    					.domain([0, 1000, 5000, 10000, 20000, 30000, 50000, 80000, 200000]),
+				width: "100%",
+				color: this.props.color,
     			data: this.props.mdJSON,
 			};
 		};
 
-		render(){
-			console.log('rendering...')
-			var {color} = this.state;
-			return (<div id="contain"><svg></svg><ReactResizeDetector handleWidth handleHeight onResize={this._onResize.bind(this)} /></div>);
+		render(e){
+			var {color, width, data} = this.state;
+			console.log(width);
+			return (<div id="contain" width={width}>
+						<svg width={width}></svg>
+						<div id="legend"><Legend 
+						mdJSON = {data}
+						color = {color}
+						/></div>
+						<ReactResizeDetector handleWidth onResize={this._onResize.bind(this)}/>
+					</div>
+				);
 
 			//renderMap();
 		};
@@ -28,23 +40,29 @@ class Map extends React.Component {
 			this.renderMap(this.state.data, this.state.color);
 		}
 
-		_onResize(){
-			this.render();
+		_onResize(e){
+			this.setState({width: e});
+		}
+
+		componentDidUpdate(prevProps, prevState) {
+			this.renderMap(this.state.data, this.state.color);
+			this.Domain(this.state.data);
 		}
 
 		renderMap(data, color) {
-			console.log('lilbitch')
-			setTimeout(function(){
+			//console.log('lilbitch')
+			var chart = d3.select("svg");
+			if(chart){
+				chart.html("");
+			};
+
 		    d3.select("svg")
 		        .attr('width', '100%')
-		        .attr('height', '80%')
+		        .attr('height', '90%')
 		        .attr('display', 'block')
 		        .style('padding-top', '10px')
-		        .call(d3.zoom().on("zoom", function() {
-		            svg.attr("transform", d3.event.transform)
-		        }))
 
-		    var chart = d3.select("svg");
+		    
 		    var topology = topojson.topology({ counties: data });
 
 		    var land = topojson.feature(topology, {
@@ -75,7 +93,7 @@ class Map extends React.Component {
 		        .attr('data-Scroll', function(d, a) { return a * 357 })
 		        .on('mouseover', function(d) {
 		            document.getElementById("app").scrollTop = (this.getAttribute("data-Scroll") - 2);
-		            console.log(d.properties.NAME)
+		            //console.log(d.properties.NAME)
 		        })
 		        .style("fill", function(d) {
 
@@ -89,10 +107,63 @@ class Map extends React.Component {
 		                return "#fffff";
 		            }
 		        });
-		        },1000)
-			};
 
+		      
+
+
+
+		        // svg.select(".legendQuant")
+		        //     .call(colorLegend);
+		        };
+
+			Domain(data){
+				var dl = data.features.map(features => features.properties.MHI);
+			}
+
+	};
+
+class Legend extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			data : this.props.mdJSON,
+			color : this.props.color
 		}
+	};
+	
+	render(){
+		var {color, data} = this.state;
+		return (
+			<svg></svg>
+		);
+		
+	};
+
+	componentDidMount(){
+		this.renderLegend(this.state.data, this.state.color);
+	};
+
+	renderLegend(data, color){
+		console.log('yo');
+		var chart = d3.select("#legend>svg");
+
+		chart.append("g")
+		    .attr("class", "legendQuant")
+		    .attr("transform", "translate(20,20)");
+
+
+		var legend = svgLegend.legendColor()
+    		.labelFormat(d3.format(".2f"))
+    		.labels(svgLegend.legendHelpers.thresholdLabels)
+    		.useClass(true)
+    		.scale(color)
+
+    	chart.select(".legendQuant")
+  			.call(legend);
+	}
+
+
+}
 
 
 

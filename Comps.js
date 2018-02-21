@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-
+import scaleCluster from 'd3-scale-cluster';
 
 function sideBar(mdJSON) {
 	var mountNode = document.getElementById("app");
@@ -48,9 +48,9 @@ function sideBar(mdJSON) {
 
 		render(){
 			//console.log(this.props.mdJSON.features)
-			const color = d3.scaleThreshold()
-    			.range(["#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#49006a"])
-    			.domain([0, 1000, 5000, 10000, 20000, 30000, 50000, 80000, 200000]);
+			const color = d3.scaleLinear()
+    						.domain(this.props.mdJSON.features.map(features => features.properties.MHI))
+    						.range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"]);
 
     		const pathStyle = {stroke: "black", fill:"#9C27B0"};
 

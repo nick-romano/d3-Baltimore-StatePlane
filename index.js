@@ -1,7 +1,5 @@
 import _ from 'lodash';
-
 import './style.css';
-
 var mdJSON = require('./mdmhi.json')
 //const simpleSlider = require('d3-simple-slider').sliderHorizontal;
 require('expose-loader?d3!d3');
@@ -11,9 +9,16 @@ require('expose-loader?ReactDOM!react-dom');
 import sideBar from './comps.js'
 import Map from './mapFunctions.js'
 
+console.log(mdJSON);
+
+var c =d3.scaleLinear()
+    .domain(mdJSON.features.map(features => features.properties.MHI))
+    .range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"]);
+
 ReactDOM.render(
         <Map
         mdJSON={mdJSON}
+        color = {c}
         />, 
         document.querySelector('.item-2')
     );
