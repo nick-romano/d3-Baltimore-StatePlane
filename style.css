@@ -3,12 +3,18 @@
 }
 
 @media screen and (max-width:770px) {
-.container {
-  height: 100vh;
-  display: grid;
-  grid-template-columns: auto 0px;
-  grid-template-rows: 80px auto;
-}
+  .container {
+    height: 100vh;
+  }
+  .content-contain {
+    display: grid;
+    grid-template-columns: 100% 0%;
+    height: 90%;
+  }
+
+  .item .item-3 {
+    display: none;
+  }
 }
 
 button {

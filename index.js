@@ -1,13 +1,17 @@
 import _ from 'lodash';
 import './style.css';
 var mdJSON = require('./mdmhi.json')
-//const simpleSlider = require('d3-simple-slider').sliderHorizontal;
+//const simpleSlider = require('d3-simple-slider').sliderHorizontal;;
+//d3.sliderHorizontal = simpleSlider;
+import jsonUtils from './jsonUtils.js'
+import Map from './mapComponents.js'
+
+console.log(jsonUtils)
+
 require('expose-loader?d3!d3');
 require('expose-loader?React!react');
-require('expose-loader?ReactDOM!react-dom');
-//d3.sliderHorizontal = simpleSlider;
-import sideBar from './comps.js'
-import Map from './mapFunctions.js'
+require('expose-loader?ReactDOM!react-dom')
+
 
 console.log(mdJSON);
 
@@ -17,37 +21,49 @@ var c =d3.scaleLinear()
 
 ReactDOM.render(
         <Map
-        mdJSON={mdJSON}
+        mdJSON= {mdJSON}
         color = {c}
         />, 
-        document.querySelector('.item-2')
-    );
+        document.querySelector('.content')
+);
 
 
-function Query(url) {
-    fetch('../data/baltimore/acs5', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            fields: 'mhi'
-        })
-    }).then(function(response) {
-        // The response is a Response instance.
-        // You parse the data into a useable format using `.json()`
-        return response.json();
-    }).then(function(data) {
-        // `data` is the parsed version of the JSON returned from the above endpoint.
-        console.log(data);
-    });
-}
+// function Query(url) {
+//     fetch('http://nick-romano.us/data/baltimore/ACS5_2016', {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             fields: 'mhi'
+//         })
+//     }).then(function(response) {
+//         // The response is a Response instance.
+//         // You parse the data into a useable format using `.json()`
+//         return response.json();
+//     }).then(function(data) {
 
 
+//         // `data` is the parsed version of the JSON returned from the above endpoint.
+//         console.log('dude')
+//         console.log(data);
+
+//         ReactDOM.render(
+//         <Map
+//         mdJSON={data[0].jsonb_build_object}
+//         color = {c}
+//         />, 
+//         document.querySelector('.content')
+//     );
+
+//     });
+// }
+
+// Query();
 
 
-sideBar(mdJSON);
+//sideBar(mdJSON);
 
 
 
