@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import './style.css';
-var mdJSON = require('./mdmhi.json')
+//var mdJSON = require('./mdmhi.json')
 //const simpleSlider = require('d3-simple-slider').sliderHorizontal;;
 //d3.sliderHorizontal = simpleSlider;
 import jsonUtils from './jsonUtils.js'
@@ -13,54 +13,60 @@ require('expose-loader?React!react');
 require('expose-loader?ReactDOM!react-dom')
 
 
-console.log(mdJSON);
+//console.log(mdJSON);
 
-var c =d3.scaleLinear()
-    .domain(mdJSON.features.map(features => features.properties.MHI))
-    .range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"].reverse());
+// var c =d3.scaleLinear()
+//     .domain(mdJSON.features.map(features => features.properties.MHI))
+//     .range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"].reverse());
 
-ReactDOM.render(
-        <Map
-        mdJSON= {mdJSON}
-        color = {c}
-        />, 
-        document.querySelector('.content')
-);
-
-
-// function Query(url) {
-//     fetch('http://nick-romano.us/data/baltimore/ACS5_2016', {
-//         method: 'POST',
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             fields: 'mhi'
-//         })
-//     }).then(function(response) {
-//         // The response is a Response instance.
-//         // You parse the data into a useable format using `.json()`
-//         return response.json();
-//     }).then(function(data) {
-
-
-//         // `data` is the parsed version of the JSON returned from the above endpoint.
-//         console.log('dude')
-//         console.log(data);
-
-//         ReactDOM.render(
+// ReactDOM.render(
 //         <Map
-//         mdJSON={data[0].jsonb_build_object}
+//         mdJSON= {mdJSON}
 //         color = {c}
 //         />, 
 //         document.querySelector('.content')
-//     );
+// );
 
-//     });
-// }
 
-// Query();
+function Query(url) {
+    fetch('http://nick-romano.us/data/baltimore/ACS5_2016', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            fields: 'mhi'
+        })
+    }).then(function(response) {
+        // The response is a Response instance.
+        // You parse the data into a useable format using `.json()`
+        return response.json();
+    }).then(function(data) {
+
+
+
+        // `data` is the parsed version of the JSON returned from the above endpoint.
+        console.log('dude')
+        console.log(data);
+        var geojson = data[0].jsonb_build_object
+
+        var c =d3.scaleLinear()
+         .domain(geojson.features.map(features => features.properties.mhi))
+         .range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"].reverse());
+
+        ReactDOM.render(
+        <Map
+        mdJSON={geojson}
+        color = {c}
+        />, 
+        document.querySelector('.content')
+    );
+
+    });
+}
+
+Query();
 
 
 //sideBar(mdJSON);

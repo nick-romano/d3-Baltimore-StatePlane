@@ -6,7 +6,8 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import Map from '../mapComponents.js'
+import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 
 class LongMenu extends React.Component {
 
@@ -21,27 +22,63 @@ class LongMenu extends React.Component {
 
 
   render() {
+    Array.prototype.contains = function (v) {
+      for (var i = 0; i < this.length; i++) {
+        if (this[i] === v) return true;
+      }
+      return false;
+    };
+
+    Array.prototype.unique = function () {
+      var arr = [];
+      for (var i = 0; i < this.length; i++) {
+        if (!arr.includes(this[i])) {
+          arr.push(this[i]);
+        }
+      }
+      return arr;
+    }
+    var neighborhoods = this.props.mdJSON.features.map((features, b) =>
+      features.properties.Neighborhood)
+
+    var neighborhoods = neighborhoods.unique();
+
+    //console.log(neighborhoods)
+
+    const listItems = neighborhoods.map((hoods,b) =>
+      <MenuItem
+        key = {b}
+        value = {b}
+        primaryText = {hoods}
+      />
+    )
+
     return (
       <Toolbar>
         <ToolbarGroup firstChild={true}>
           <DropDownMenu value={this.state.value} onChange={this.handleChange}>
-            <MenuItem value={1} primaryText="All Broadcasts" />
-            <MenuItem value={2} primaryText="All Voice" />
-            <MenuItem value={3} primaryText="All Text" />
-            <MenuItem value={4} primaryText="Complete Voice" />
-            <MenuItem value={5} primaryText="Complete Text" />
-            <MenuItem value={6} primaryText="Active Voice" />
-            <MenuItem value={7} primaryText="Active Text" />
+            {listItems}
           </DropDownMenu>
         </ToolbarGroup>
       </Toolbar>
     );
   };
 
-  handleChange(event, index, value){
-    console.log(this)
+  handleChange(event, index, value) {
     //this.setState({value: 3})
-    this.setState({value})
+    this.setState({ value })
+    console.log(event)
+    var hood = event.target.innerText;
+    console.log(this.props.mdJSON)
+    this.props.mdJSON.features = this.props.mdJSON.features.filter(r => r.properties.Neighborhood === hood);
+    
+    ReactDOM.render(
+      <Map
+      mdJSON={this.props.mdJSON}
+      color = {this.props.color}
+      />, 
+      document.querySelector('.content')
+  );
   }
 }
 

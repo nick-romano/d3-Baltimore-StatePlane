@@ -13,7 +13,7 @@ import LongMenu from './materialComponents/menu';
 
 var svgLegend = legend;
 
-console.log(scaleCluster)
+//console.log(scaleCluster)
 
 //var mdJSON = require('./mdmhi.json')
 class Map extends React.Component {
@@ -29,7 +29,7 @@ class Map extends React.Component {
 
 	render(e) {
 		var { color, width, data } = this.state;
-		console.log(width);
+		//console.log(width);
 
 		return (
 			<div className="content-contain" width={width}>
@@ -88,7 +88,7 @@ class Map extends React.Component {
 			})
 		});
 
-		console.log(land)
+		//console.log(land)
 
 		var svgHeight = d3.select('svg').style('height').slice(0, -2) * 1;
 		var svgWidth = d3.select('svg').style('width').slice(0, -2) * 1;
@@ -113,7 +113,7 @@ class Map extends React.Component {
 			.style("fill", function (d) {
 
 				// Get data value
-				var value = d.properties.MHI;
+				var value = d.properties.mhi;
 				if (value) {
 					//If value exists…
 					return color(value);
@@ -196,20 +196,20 @@ class ProfileList extends React.Component {
 
 		const listItems = this.props.mdJSON.features.map((features, b) =>
 			<Profile
-				key={features.properties.GEOID}
-				blockGroup={features.properties.NAME}
+				key={features.properties.geoid}
+				blockGroup={features.properties.name}
 				radius={svgUtils.prototype.getPath(features, features)}
-				Population={features.properties.TOTALPOPULATION}
-				MHI={features.properties.MHI}
-				Vacants={features.properties.VACANT}
+				Population={features.properties.totalpopul}
+				MHI={features.properties.mhi}
+				Vacants={features.properties.vacant}
 				Scroll={b * 357}
-				Color={features.properties.MHI ? this.props.color(features.properties.MHI) : "#fffff"}
+				Color={features.properties.mhi ? this.props.color(features.properties.mhi) : "#fffff"}
 			/>
 		)
 		//console.log(listItems)
 		return (
 			<div>
-				<MuiThemeProvider><LongMenu /></MuiThemeProvider>
+				<MuiThemeProvider><LongMenu mdJSON={this.props.mdJSON} color={this.props.color}/></MuiThemeProvider>
 				{listItems}
 			</div>
 		)
@@ -251,7 +251,6 @@ class Profile extends React.Component {
 		this.setState({ height: this.state.height - 20 });
 	};
 };
-
 
 
 export default Map;
