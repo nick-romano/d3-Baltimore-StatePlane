@@ -17,7 +17,7 @@ console.log(mdJSON);
 
 var c =d3.scaleLinear()
     .domain(mdJSON.features.map(features => features.properties.MHI))
-    .range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"]);
+    .range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"].reverse());
 
 ReactDOM.render(
         <Map

@@ -3,7 +3,13 @@ import * as topojson from "topojson";
 import ReactResizeDetector from 'react-resize-detector';
 import scaleCluster from 'd3-scale-cluster';
 import legend from 'd3-svg-legend';
-import svgUtils from './svgUtils.js'
+import svgUtils from './svgUtils.js';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+
+import LongMenu from './materialComponents/menu';
+
 
 var svgLegend = legend;
 
@@ -175,8 +181,39 @@ class Legend extends React.Component {
 			rects[i].style.fill = rects[i].classList[1] + rects[i].classList[2] + rects[i].classList[3]
 		}
 
-
+		var b = document.querySelector('#legend > svg > g > g > g:nth-child(5) > text')
+		b.innerHTML = b.innerHTML.replace("more", "less")
 	}
+};
+
+class ProfileList extends React.Component {
+	constructor(props) {
+		super(props);
+	};
+
+	render() {
+		const pathStyle = { stroke: "black", fill: "#9C27B0" };
+
+		const listItems = this.props.mdJSON.features.map((features, b) =>
+			<Profile
+				key={features.properties.GEOID}
+				blockGroup={features.properties.NAME}
+				radius={svgUtils.prototype.getPath(features, features)}
+				Population={features.properties.TOTALPOPULATION}
+				MHI={features.properties.MHI}
+				Vacants={features.properties.VACANT}
+				Scroll={b * 357}
+				Color={features.properties.MHI ? this.props.color(features.properties.MHI) : "#fffff"}
+			/>
+		)
+		//console.log(listItems)
+		return (
+			<div>
+				<MuiThemeProvider><LongMenu /></MuiThemeProvider>
+				{listItems}
+			</div>
+		)
+	};
 };
 
 class Profile extends React.Component {
@@ -212,35 +249,6 @@ class Profile extends React.Component {
 
 	zoomPicOut() {
 		this.setState({ height: this.state.height - 20 });
-	};
-};
-
-class ProfileList extends React.Component {
-	constructor(props) {
-		super(props);
-	};
-
-	render() {
-		const pathStyle = { stroke: "black", fill: "#9C27B0" };
-
-		const listItems = this.props.mdJSON.features.map((features, b) =>
-			<Profile
-				key={features.properties.GEOID}
-				blockGroup={features.properties.NAME}
-				radius={svgUtils.prototype.getPath(features, features)}
-				Population={features.properties.TOTALPOPULATION}
-				MHI={features.properties.MHI}
-				Vacants={features.properties.VACANT}
-				Scroll={b * 357}
-				Color={features.properties.MHI ? this.props.color(features.properties.MHI) : "#fffff"}
-			/>
-		)
-		//console.log(listItems)
-		return (
-			<div>
-				{listItems}
-			</div>
-		)
 	};
 };
 
