@@ -4,9 +4,8 @@ import ReactResizeDetector from 'react-resize-detector';
 import scaleCluster from 'd3-scale-cluster';
 import legend from 'd3-svg-legend';
 import svgUtils from './svgUtils.js';
-
+import Fade from 'react-reveal/Fade';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
 
 import LongMenu from './materialComponents/menu';
 
@@ -42,6 +41,7 @@ class Map extends React.Component {
 					<ReactResizeDetector handleWidth onResize={this._onResize.bind(this)} />
 				</div>
 				<div className="item item-3" id="app">
+					<MuiThemeProvider><LongMenu Neighborhood={this.props.Neighborhood} mdJSON={this.props.mdJSON} color={this.props.color}/></MuiThemeProvider>
 					<ProfileList
 						mdJSON={data}
 						color={color}
@@ -80,15 +80,15 @@ class Map extends React.Component {
 			.style('padding-top', '10px')
 
 
-		var topology = topojson.topology({ counties: data });
-		var land = topojson.feature(topology, {
-			type: "GeometryCollection",
-			geometries: topology.objects.counties.geometries.filter(function (d) {
-				return (d.id / 10000 | 0) % 100 !== 99;
-			})
-		});
+		// var topology = topojson.topology({ counties: data });
+		// var land = topojson.feature(topology, {
+		// 	type: "GeometryCollection",
+		// 	geometries: topology.objects.counties.geometries.filter(function (d) {
+		// 		return (d.id / 10000 | 0) % 100 !== 99;
+		// 	})
+		// });
 
-		//console.log(land)
+		// //console.log(land)
 
 		var svgHeight = d3.select('svg').style('height').slice(0, -2) * 1;
 		var svgWidth = d3.select('svg').style('width').slice(0, -2) * 1;
@@ -105,7 +105,7 @@ class Map extends React.Component {
 			.attr("d", path)
 			.style("stroke", "#fff")
 			.style("stroke-width", "1")
-			.attr('data-Scroll', function (d, a) { return a * (232+39) })
+			.attr('data-Scroll', function (d, a) { return a * (232+39+58) })
 			.on('mouseover', function (d) {
 				document.getElementById("app").scrollTop = (this.getAttribute("data-Scroll") - 2);
 				//console.log(d.properties.NAME)
@@ -166,7 +166,7 @@ class Legend extends React.Component {
 
 
 		var legend = svgLegend.legendColor()
-			.labelFormat(d3.format(".2f"))
+			.labelFormat(d3.format("$"))
 			.labels(svgLegend.legendHelpers.thresholdLabels)
 			.useClass(true)
 			.scale(color)
@@ -178,11 +178,11 @@ class Legend extends React.Component {
 
 		var rects = d3.selectAll(".legendCells>g>rect")["_groups"][0];
 		for (var i = 0; i < rects.length; i++) {
-			rects[i].style.fill = rects[i].classList[1] + rects[i].classList[2] + rects[i].classList[3]
+			rects[i].style.fill = rects[i].classList[1];
 		}
 
 		var b = document.querySelector('#legend > svg > g > g > g:nth-child(5) > text')
-		b.innerHTML = b.innerHTML.replace("more", "less")
+		b.innerHTML = b.innerHTML.replace("or more", "")
 	}
 };
 
@@ -191,8 +191,14 @@ class ProfileList extends React.Component {
 		super(props);
 	};
 
+	
+
 	render() {
 		const pathStyle = { stroke: "black", fill: "#9C27B0" };
+
+		const listStyles = {
+			 marginTop: "70px"
+		}
 
 		const listItems = this.props.mdJSON.features.map((features, b) =>
 			<Profile
@@ -200,17 +206,20 @@ class ProfileList extends React.Component {
 				blockGroup={features.properties.name}
 				radius={svgUtils.prototype.getPath(features, features)}
 				Population={features.properties.totalpopul}
-				MHI={features.properties.mhi}
+				MHI={features.properties.mhi ? features.properties.mhi : "NA"}
+				Neighborhood={features.properties.Neighborhood}
 				Vacants={features.properties.vacant}
 				Scroll={b * 357}
 				Color={features.properties.mhi ? this.props.color(features.properties.mhi) : "#fffff"}
 			/>
 		)
+
 		//console.log(listItems)
 		return (
-			<div>
-				<MuiThemeProvider><LongMenu mdJSON={this.props.mdJSON} color={this.props.color}/></MuiThemeProvider>
+			<div style = {listStyles}>
+				<Fade bottom>
 				{listItems}
+				</Fade>
 			</div>
 		)
 	};
@@ -232,7 +241,7 @@ class Profile extends React.Component {
 		var template = <div className="box-profile" data-scroll={this.props.Scroll}>
 			<h6>{this.props.blockGroup}</h6>
 			<h6>Population: {this.props.Population}</h6>
-			<p> {this.props.Neighborhood}</p>
+			<h6> {this.props.Neighborhood}</h6>
 			<h6>Median Household income: $ {this.props.MHI}</h6>
 			<h6>Number of Vacant Homes: {this.props.Vacants}</h6>
 			{svgUtils.prototype.createPathElement(this.props)}

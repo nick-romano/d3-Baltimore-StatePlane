@@ -1,6 +1,6 @@
-.box-profile:first-child {
+/* .box-profile:first-child {
   margin-top:10px;
-}
+} */
 
 @media screen and (max-width:770px) {
   .container {

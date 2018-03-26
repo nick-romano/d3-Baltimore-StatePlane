@@ -51,13 +51,35 @@ function Query(url) {
         console.log(data);
         var geojson = data[0].jsonb_build_object
 
-        var c =d3.scaleLinear()
+        var c =d3.scaleQuantile()
          .domain(geojson.features.map(features => features.properties.mhi))
          .range(["#533A71", "#6184D8", "#50C5B7", "#9CEC5B", "#F4C002"].reverse());
+
+         Array.prototype.contains = function (v) {
+            for (var i = 0; i < this.length; i++) {
+              if (this[i] === v) return true;
+            }
+            return false;
+          };
+      
+          Array.prototype.unique = function () {
+            var arr = [];
+            for (var i = 0; i < this.length; i++) {
+              if (!arr.includes(this[i])) {
+                arr.push(this[i]);
+              }
+            }
+            return arr;
+          }
+          var neighborhoods = geojson.features.map((features, b) =>
+            features.properties.Neighborhood)
+      
+          var neighborhoods = neighborhoods.unique();
 
         ReactDOM.render(
         <Map
         mdJSON={geojson}
+        Neighborhood={neighborhoods}
         color = {c}
         />, 
         document.querySelector('.content')

@@ -14,7 +14,7 @@ class LongMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 1,
+      value: 0,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -22,30 +22,12 @@ class LongMenu extends React.Component {
 
 
   render() {
-    Array.prototype.contains = function (v) {
-      for (var i = 0; i < this.length; i++) {
-        if (this[i] === v) return true;
-      }
-      return false;
-    };
-
-    Array.prototype.unique = function () {
-      var arr = [];
-      for (var i = 0; i < this.length; i++) {
-        if (!arr.includes(this[i])) {
-          arr.push(this[i]);
-        }
-      }
-      return arr;
-    }
-    var neighborhoods = this.props.mdJSON.features.map((features, b) =>
-      features.properties.Neighborhood)
-
-    var neighborhoods = neighborhoods.unique();
+    console.log("rendo")
+    
 
     //console.log(neighborhoods)
 
-    const listItems = neighborhoods.map((hoods,b) =>
+    const listItems = this.props.Neighborhood.map((hoods,b) =>
       <MenuItem
         key = {b}
         value = {b}
@@ -53,10 +35,20 @@ class LongMenu extends React.Component {
       />
     )
 
+    const ToolbarColor = {
+      background: "white",
+      "borderBottom": "1px solid black",
+      position: "fixed",
+      width: "100%",
+      zIndex: 1,
+
+
+    }
+
     return (
-      <Toolbar>
+      <Toolbar style={ToolbarColor}>
         <ToolbarGroup firstChild={true}>
-          <DropDownMenu value={this.state.value} onChange={this.handleChange}>
+          <DropDownMenu value={this.state.value} onChange={this.handleChange} >
             {listItems}
           </DropDownMenu>
         </ToolbarGroup>
@@ -66,8 +58,9 @@ class LongMenu extends React.Component {
 
   handleChange(event, index, value) {
     //this.setState({value: 3})
-    this.setState({ value })
-    console.log(event)
+    console.log(event);
+    this.setState({ value });
+    
     var hood = event.target.innerText;
     console.log(this.props.mdJSON)
     this.props.mdJSON.features = this.props.mdJSON.features.filter(r => r.properties.Neighborhood === hood);
@@ -75,6 +68,7 @@ class LongMenu extends React.Component {
     ReactDOM.render(
       <Map
       mdJSON={this.props.mdJSON}
+      Neighborhood={this.props.Neighborhood}
       color = {this.props.color}
       />, 
       document.querySelector('.content')
