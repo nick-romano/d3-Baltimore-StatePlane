@@ -1,20 +1,22 @@
 import * as d3 from "d3";
-import * as topojson from "topojson";
 import ReactResizeDetector from 'react-resize-detector';
 import scaleCluster from 'd3-scale-cluster';
 import legend from 'd3-svg-legend';
 import svgUtils from './svgUtils.js';
 import Fade from 'react-reveal/Fade';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import LongMenu from './materialComponents/menu';
 
 
 var svgLegend = legend;
 
-//console.log(scaleCluster)
-
-//var mdJSON = require('./mdmhi.json')
 class Map extends React.Component {
 	constructor(props) {
 		super(props);
@@ -41,7 +43,7 @@ class Map extends React.Component {
 					<ReactResizeDetector handleWidth onResize={this._onResize.bind(this)} />
 				</div>
 				<div className="item item-3" id="app">
-					<MuiThemeProvider><LongMenu Neighborhood={this.props.Neighborhood} mdJSON={this.props.mdJSON} color={this.props.color}/></MuiThemeProvider>
+					<MuiThemeProvider><LongMenu Neighborhood={this.props.Neighborhood} mdJSON={data} color={this.props.color}/></MuiThemeProvider>
 					<ProfileList
 						mdJSON={data}
 						color={color}
@@ -49,12 +51,10 @@ class Map extends React.Component {
 			</div>
 
 		);
-
-		//renderMap();
 	};
 
 	componentDidMount() {
-		this.renderMap(this.state.data, this.state.color);
+		this.renderMap(this.props.mdJSON, this.state.color);
 	}
 
 	_onResize(e) {
@@ -62,12 +62,11 @@ class Map extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		this.renderMap(this.state.data, this.state.color);
+		this.renderMap(this.props.mdJSON, this.state.color);
 		this.Domain(this.state.data);
 	}
 
 	renderMap(data, color) {
-		//console.log('lilbitch')
 		var chart = d3.select("svg");
 		if (chart) {
 			chart.html("");
@@ -238,7 +237,7 @@ class Profile extends React.Component {
 		//var { blockGroup, Population, Neighborhood, radius,pathStyle } = this.props;
 
 		var { height } = this.state;
-		var template = <div className="box-profile" data-scroll={this.props.Scroll}>
+		var template = <Card data-scroll={this.props.Scroll} className="box-profile">
 			<h6>{this.props.blockGroup}</h6>
 			<h6>Population: {this.props.Population}</h6>
 			<h6> {this.props.Neighborhood}</h6>
@@ -246,7 +245,7 @@ class Profile extends React.Component {
 			<h6>Number of Vacant Homes: {this.props.Vacants}</h6>
 			{svgUtils.prototype.createPathElement(this.props)}
 			<br />
-		</div>
+		</Card>
 		return (
 			template
 		);
