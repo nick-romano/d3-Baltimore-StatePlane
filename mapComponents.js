@@ -6,7 +6,7 @@ import svgUtils from './svgUtils.js';
 import Fade from 'react-reveal/Fade';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
+import Profile from './mapComponents/ProfileCard';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
@@ -221,42 +221,6 @@ class ProfileList extends React.Component {
 				</Fade>
 			</div>
 		)
-	};
-};
-
-class Profile extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			height: 100,
-		}
-	};
-
-	render() {
-		//console.log(this.props)
-		//var { blockGroup, Population, Neighborhood, radius,pathStyle } = this.props;
-
-		var { height } = this.state;
-		var template = <Card data-scroll={this.props.Scroll} className="box-profile">
-			<h6>{this.props.blockGroup}</h6>
-			<h6>Population: {this.props.Population}</h6>
-			<h6> {this.props.Neighborhood}</h6>
-			<h6>Median Household income: $ {this.props.MHI}</h6>
-			<h6>Number of Vacant Homes: {this.props.Vacants}</h6>
-			{svgUtils.prototype.createPathElement(this.props)}
-			<br />
-		</Card>
-		return (
-			template
-		);
-	};
-
-	zoomPicIn() {
-		this.setState({ height: this.state.height + 20 });
-	};
-
-	zoomPicOut() {
-		this.setState({ height: this.state.height - 20 });
 	};
 };
 

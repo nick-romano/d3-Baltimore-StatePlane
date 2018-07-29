@@ -5,9 +5,9 @@ class svgUtils {
     //takes path and color and creates 50x50 pixel svg
     createPathElement(props) {
         return <div>
-            <svg height={75} width={75}>
+            <svg height={50} width={65}>
                 {/* <circle r={50} cx={"50%"} cy={"50%"}></circle> */}
-                <path d={props.radius} fill={props.Color} cy={20} />
+                <path d={props.radius} fill={props.Color} cy={0} />
             </svg>
         </div>
     };
